@@ -1,0 +1,33 @@
+{
+	"name": "2_container_image_demo",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"build": "yarn build-container",
+		"build-container": "cd functions/container && docker build -t container-lambda:latest .",
+		"build-oversized": "cd functions/oversized && rm -rf node_modules && yarn install --production && cd ../.. && cross-zip functions/oversized build/oversized.zip",
+		"deploy": "yarn deploy-container & yarn deploy-sam-updated",
+		"deploy-container": "yarn deploy-container-1 && yarn deploy-container-2 && yarn deploy-container-3 && yarn deploy-container-4",
+		"deploy-container-1": "aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin [AWS_ACCOUNT_ID].dkr.ecr.ap-southeast-2.amazonaws.com",
+		"deploy-container-2": "aws ecr create-repository --repository-name container-lambda --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE",
+		"deploy-container-3": "docker tag container-lambda:latest [AWS_ACCOUNT_ID].dkr.ecr.ap-southeast-2.amazonaws.com/container-lambda:latest",
+		"deploy-container-4": "docker push [AWS_ACCOUNT_ID].dkr.ecr.ap-southeast-2.amazonaws.com/container-lambda:latest",
+		"deploy-sam-updated": "yarn deploy-sam-updated-1 && yarn deploy-sam-updated-2 && yarn deploy-sam-updated-3 && yarn deploy-sam-updated-4",
+		"deploy-sam-updated-1": "aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin [AWS_ACCOUNT_ID].dkr.ecr.ap-southeast-2.amazonaws.com",
+		"deploy-sam-updated-2": "aws ecr create-repository --repository-name sam-updated-lambda --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE",
+		"deploy-oversized": "aws lambda create-function --function-name oversized --zip-file fileb://build/oversized.zip --handler oversizedFn.customHandler --runtime nodejs14.x --role arn:aws:iam::[AWS_ACCOUNT_ID]:role/lambda-demo",
+		"destroy": "yarn destroy-container",
+		"destroy-container": "aws lambda delete-function --function-name container && aws ecr delete-repository --repository-name container-lambda",
+		"destroy-oversized": "aws lambda delete-function --function-name oversized",
+		"invoke": "yarn invoke-oversized",
+		"invoke-oversized": "aws lambda invoke --function-name oversized responses/oversized.json",
+		"preview-container": "cd functions/container && yarn install && node preview.js",
+		"sam-updated": "cd functions/sam-updated && sam.cmd",
+		"simulate-oversized": "cd functions/oversized && yarn install && node preview.js",
+		"start-container": "docker run -p 9000:8080 container-lambda:latest"
+	},
+	"devDependencies": {
+		"cross-zip-cli": "^1.0.0"
+	}
+}
