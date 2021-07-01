@@ -1,0 +1,4 @@
+{
+	"statusCode": 200,
+	"body": "{\"id\":\"Mr. Odessa Howe I (Legacy Usability Designer)\",\"meta\":{\"event\":{},\"context\":{\"callbackWaitsForEmptyEventLoop\":true,\"functionVersion\":\"$LATEST\",\"functionName\":\"restapi\",\"memoryLimitInMB\":\"128\",\"logGroupName\":\"/aws/lambda/restapi\",\"logStreamName\":\"2021/07/01/[$LATEST]94f8a8293a314f7fa550aa2325bbff07\",\"invokedFunctionArn\":\"arn:aws:lambda:ap-southeast-2:[AWS_ACCOUNT_ID]:function:restapi\",\"awsRequestId\":\"1d9ccf1c-0f09-427e-b2f8-ffc961d25904\"}}}"
+}

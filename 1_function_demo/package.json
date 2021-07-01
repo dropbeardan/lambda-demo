@@ -1,0 +1,39 @@
+{
+	"name": "1_function_demo",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"build": "yarn build-inspector & yarn build-internet & yarn build-interval & yarn build-libraries & yarn build-restapi & yarn build-vpc",
+		"build-inspector": "cross-zip functions/inspector build/inspector.zip",
+		"build-internet": "cd functions/internet && rm -rf node_modules && yarn install --production && cd ../.. && cross-zip functions/internet build/internet.zip",
+		"build-interval": "cd functions/interval && rm -rf node_modules && yarn install --production && cd ../.. && cross-zip functions/interval build/interval.zip",
+		"build-libraries": "cd functions/libraries && rm -rf node_modules && yarn install --production && cd ../.. && cross-zip functions/libraries build/libraries.zip",
+		"build-restapi": "cd functions/restapi && rm -rf node_modules && yarn install --production && cd ../.. && cross-zip functions/restapi build/restapi.zip",
+		"build-vpc": "cd functions/vpc && rm -rf node_modules && yarn install --production && cd ../.. && cross-zip functions/vpc build/vpc.zip",
+		"deploy": "yarn deploy-inspector & yarn deploy-internet & yarn deploy-interval & yarn deploy-libraries & yarn deploy-restapi & yarn deploy-vpc",
+		"deploy-inspector": "aws lambda create-function --function-name inspector --zip-file fileb://build/inspector.zip --handler inspectorFn.customHandler --runtime nodejs14.x --role arn:aws:iam::[AWS_ACCOUNT_ID]:role/lambda-demo",
+		"deploy-internet": "aws lambda create-function --function-name internet --zip-file fileb://build/internet.zip --handler internetFn.customHandler --runtime nodejs14.x --role arn:aws:iam::[AWS_ACCOUNT_ID]:role/lambda-demo",
+		"deploy-interval": "aws lambda create-function --function-name interval --zip-file fileb://build/interval.zip --handler intervalFn.customHandler --runtime nodejs14.x --role arn:aws:iam::[AWS_ACCOUNT_ID]:role/lambda-demo",
+		"deploy-libraries": "aws lambda create-function --function-name libraries --zip-file fileb://build/libraries.zip --handler librariesFn.customHandler --runtime nodejs14.x --role arn:aws:iam::[AWS_ACCOUNT_ID]:role/lambda-demo",
+		"deploy-restapi": "aws lambda create-function --function-name restapi --zip-file fileb://build/restapi.zip --handler restapiFn.customHandler --runtime nodejs14.x --role arn:aws:iam::[AWS_ACCOUNT_ID]:role/lambda-demo",
+		"deploy-vpc": "aws lambda create-function --function-name vpc --zip-file fileb://build/vpc.zip --handler vpcFn.customHandler --runtime nodejs14.x --role arn:aws:iam::[AWS_ACCOUNT_ID]:role/lambda-demo",
+		"destroy": "yarn destroy-inspector & yarn destroy-internet & yarn destroy-interval & yarn destroy-libraries & yarn destroy-restapi & yarn destroy-vpc",
+		"destroy-inspector": "aws lambda delete-function --function-name inspector",
+		"destroy-internet": "aws lambda delete-function --function-name internet",
+		"destroy-interval": "aws lambda delete-function --function-name interval",
+		"destroy-libraries": "aws lambda delete-function --function-name libraries",
+		"destroy-restapi": "aws lambda delete-function --function-name restapi",
+		"destroy-vpc": "aws lambda delete-function --function-name vpc",
+		"invoke": "yarn invoke-inspector & yarn invoke-internet & yarn invoke-interval & yarn invoke-libraries & yarn invoke-restapi & yarn invoke-vpc",
+		"invoke-inspector": "aws lambda invoke --function-name inspector responses/inspector.json",
+		"invoke-internet": "aws lambda invoke --function-name internet responses/internet.json",
+		"invoke-interval": "aws lambda invoke --function-name interval responses/interval.json",
+		"invoke-libraries": "aws lambda invoke --function-name libraries responses/libraries.json",
+		"invoke-restapi": "aws lambda invoke --function-name restapi responses/restapi.json",
+		"invoke-vpc": "aws lambda invoke --function-name vpc responses/vpc.json"
+	},
+	"devDependencies": {
+		"cross-zip-cli": "^1.0.0"
+	}
+}
